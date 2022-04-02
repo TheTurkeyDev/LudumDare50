@@ -1,26 +1,14 @@
-import { BaseTheme, Body1, Body2, Caption, ContainedButton, Elevation, Headline5, Overline, Subtitle1 } from '@theturkeydev/gobble-lib-react';
-import { useEffect, useState } from 'react';
-import styled, { css, keyframes, ThemeProps } from 'styled-components';
+import { BaseTheme, Body1, ContainedButton, Headline5, Subtitle1 } from '@theturkeydev/gobble-lib-react';
+import { useState } from 'react';
+import styled, { ThemeProps } from 'styled-components';
 import { Challenge } from '../challenges-enum';
 import { useGame } from '../game-context';
+import { ContentBox, ContentWrapper } from '../styles/styles';
 import { UnCaptchaInfo } from './un-captcha-info';
 
-const ContentWrapper = styled.div`
-    width: 100%;
-    height: 100%;
-    display: grid;
-    justify-items: center;
-    align-items: center;
-`;
-
-const CaptchaBox = styled.div`
+const CaptchaBox = styled(ContentBox)`
     width: 400px;
     height: 300px;
-    background-color: ${({ theme }: ThemeProps<BaseTheme>) => theme.surface.color};
-    border: 1px solid ${({ theme }: ThemeProps<BaseTheme>) => theme.inputs.outlineRaised};
-    box-shadow: ${Elevation.lowest};
-    border-radius: 5px;
-
     display: grid;
     grid-template-rows: auto 1fr auto;
     padding: 8px 16px;
@@ -86,13 +74,14 @@ export const BallRollCaptcha = () => {
     const adjRot = rot - (rot % 20);
     const [rotation, setRotation] = useState(adjRot);
 
-    const onSubmit = () => {
+    const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
         if (rotation % 360 === 0) {
-            addTime(100);
+            addTime(10);
             onChallengeComplete(Challenge.BallRollCaptcha);
         }
         else {
-            addTime(-50);
+            addTime(-5);
             const rot = Math.random() * 360;
             const adjRot = rot - (rot % 20);
             setRotation(adjRot);
@@ -105,24 +94,26 @@ export const BallRollCaptcha = () => {
 
     return (
         <ContentWrapper>
-            <CaptchaBox>
-                <Header>
-                    <Headline5>Touch the Arrows</Headline5>
-                    <Subtitle1>to roll the ball</Subtitle1>
-                </Header>
-                <TopContent>
-                    <ArrowIcon className='fa-solid fa-arrow-rotate-right' justify='end' onClick={() => rotate(20)} />
-                    <Ball rotation={rotation}>
-                        <Body1>Image TODO</Body1>
-                    </Ball>
-                    <ArrowIcon className='fa-solid fa-arrow-rotate-left' justify='start' onClick={() => rotate(-20)} />
-                </TopContent>
-                <BottomContent>
-                    <div />
-                    <ContainedButton onClick={() => onSubmit()}>Submit</ContainedButton>
-                    <UnCaptchaInfo />
-                </BottomContent>
-            </CaptchaBox>
+            <form onSubmit={onSubmit}>
+                <CaptchaBox>
+                    <Header>
+                        <Headline5>Touch the Arrows</Headline5>
+                        <Subtitle1>to roll the ball</Subtitle1>
+                    </Header>
+                    <TopContent>
+                        <ArrowIcon className='fa-solid fa-arrow-rotate-right' justify='end' onClick={() => rotate(20)} />
+                        <Ball rotation={rotation}>
+                            <Body1>Image TODO</Body1>
+                        </Ball>
+                        <ArrowIcon className='fa-solid fa-arrow-rotate-left' justify='start' onClick={() => rotate(-20)} />
+                    </TopContent>
+                    <BottomContent>
+                        <div />
+                        <ContainedButton type='submit'>Submit</ContainedButton>
+                        <UnCaptchaInfo />
+                    </BottomContent>
+                </CaptchaBox>
+            </form>
         </ContentWrapper>
     );
 };

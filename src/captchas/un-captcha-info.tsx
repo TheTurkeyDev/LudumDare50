@@ -15,6 +15,6 @@ export const UnCaptchaInfo = () => (
     <LogoStuff>
         <RecycleIcon className='fa-solid fa-recycle' />
         <Body2>unCAPTCHA</Body2>
-        <Overline>Privacy - Terms</Overline>
+        <Overline title='Haha, you thought'>Privacy - Terms</Overline>
     </LogoStuff>
 );

@@ -1,23 +1,12 @@
-import { BaseTheme, Body1, Body2, Caption, Elevation, Overline } from '@theturkeydev/gobble-lib-react';
+import { BaseTheme, Body1 } from '@theturkeydev/gobble-lib-react';
 import styled, { ThemeProps } from 'styled-components';
 import { useGame } from '../game-context';
+import { ContentBox, ContentWrapper } from '../styles/styles';
 import { UnCaptchaInfo } from './un-captcha-info';
 
-const ContentWrapper = styled.div`
-    width: 100%;
-    height: 100%;
-    display: grid;
-    justify-items: center;
-    align-items: center;
-`;
-
-const CaptchaBox = styled.div`
+const CaptchaBox = styled(ContentBox)`
     width: 400px;
     height: 100px;
-    background-color: ${({ theme }: ThemeProps<BaseTheme>) => theme.surface.color};
-    border: 1px solid ${({ theme }: ThemeProps<BaseTheme>) => theme.inputs.outlineRaised};
-    box-shadow: ${Elevation.lowest};
-    border-radius: 5px;
 
     display: grid;
     grid-template-columns: auto 1fr auto;

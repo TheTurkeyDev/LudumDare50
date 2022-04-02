@@ -1,9 +1,12 @@
 import { useInterval } from '@theturkeydev/gobble-lib-react';
 import { useEffect, useMemo, useState } from 'react';
+import { FinishPuzzleCaptcha } from './captchas/finish-puzzle-captcha';
 import { NotARobotCheckBox } from './captchas/not-a-robot-checkbox';
 import { BallRollCaptcha } from './captchas/roll-ball-captcha';
 import { WordInputCaptcha } from './captchas/word-input-captcha';
 import { Challenge } from './challenges-enum';
+import { MathChallenege } from './challenges/math-challenge';
+import { TypeChallenege } from './challenges/type-challenge';
 import { GameContext } from './game-context';
 import { HeaderBar } from './header-bar';
 
@@ -25,18 +28,19 @@ export const Game = () => {
     useEffect(() => {
         if (timeLeft <= 0) {
             window.location.reload();
+            setStart(false);
         }
     }, [timeLeft]);
 
 
     function startGame() {
         setStart(true);
-        setShownCaptcha(Challenge.BallRollCaptcha);
+        setShownCaptcha(Challenge.PuzzleCaptcha);
     };
 
 
-    function addTime(amount: number) {
-        setTimeLeft(old => old + amount);
+    function addTime(seconds: number) {
+        setTimeLeft(old => old + (seconds * 10));
     };
 
     function getChallengeToShow(challenge: number, challengesCompleted: number) {
@@ -47,6 +51,12 @@ export const Game = () => {
                 return <WordInputCaptcha challengesCompleted={challengesCompleted} />;
             case Challenge.BallRollCaptcha:
                 return <BallRollCaptcha />;
+            case Challenge.MathCallenge:
+                return <MathChallenege challengesCompleted={challengesCompleted} />;
+            case Challenge.TypeCallenge:
+                return <TypeChallenege challengesCompleted={challengesCompleted} />;
+            case Challenge.PuzzleCaptcha:
+                return <FinishPuzzleCaptcha challengesCompleted={challengesCompleted} />;
         }
     };
 

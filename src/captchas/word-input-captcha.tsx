@@ -1,26 +1,14 @@
-import { BaseTheme, Elevation, Input, TopLabeled } from '@theturkeydev/gobble-lib-react';
+import { BaseTheme, ContainedButton, Elevation } from '@theturkeydev/gobble-lib-react';
 import { createRef, useEffect, useState } from 'react';
 import styled, { ThemeProps } from 'styled-components';
 import { Challenge } from '../challenges-enum';
 import { useGame } from '../game-context';
+import { ContentBox, ContentWrapper } from '../styles/styles';
 import { UnCaptchaInfo } from './un-captcha-info';
 
-const ContentWrapper = styled.div`
-    width: 100%;
-    height: 100%;
-    display: grid;
-    justify-items: center;
-    align-items: center;
-`;
-
-const CaptchaBox = styled.div`
+const CaptchaBox = styled(ContentBox)`
     width: 500px;
     height: 200px;
-    background-color: ${({ theme }: ThemeProps<BaseTheme>) => theme.surface.color};
-    border: 1px solid ${({ theme }: ThemeProps<BaseTheme>) => theme.inputs.outlineRaised};
-    box-shadow: ${Elevation.lowest};
-    border-radius: 5px;
-
     display: grid;
     grid-template-rows: 100px 1fr;
     padding: 8px 16px;
@@ -35,11 +23,18 @@ const TextContent = styled.canvas`
     height: 100%;
 `;
 
-const InputContent = styled.div`
+const BottomContent = styled.div`
     display: grid;
-    grid-template-columns: 1fr auto auto;
+    grid-template-columns: 1fr auto;
     align-items: center;
     gap: 16px;
+`;
+
+const InputContent = styled.div`
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 8px;
 `;
 
 const CaptchaInput = styled.input`
@@ -64,8 +59,9 @@ export const WordInputCaptcha = ({ challengesCompleted }: WordInputCaptchaProps)
     const canvas = createRef<HTMLCanvasElement>();
     const [shownLetters, setShownLetters] = useState('');
     const { addTime, onChallengeComplete } = useGame();
+    const [input, setInput] = useState('');
 
-    const lettersToUse = Math.min(9, 3 + Math.floor(challengesCompleted / 2));
+    const lettersToUse = Math.min(9, 3 + Math.floor(challengesCompleted / 3));
     const linesToUse = 5 + challengesCompleted;
 
     useEffect(() => {
@@ -73,14 +69,18 @@ export const WordInputCaptcha = ({ challengesCompleted }: WordInputCaptchaProps)
     }, []);
 
     const reloadWords = () => {
-        addTime(-50);
+        addTime(-5);
         reloadCanvasContent();
     };
 
-    const onInputChange = (input: string) => {
+    const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
         if (input.toUpperCase() === shownLetters) {
-            addTime(100);
+            addTime(10);
             onChallengeComplete(Challenge.WordInputCaptcha);
+        }
+        else {
+            reloadWords();
         }
     };
 
@@ -155,16 +155,21 @@ export const WordInputCaptcha = ({ challengesCompleted }: WordInputCaptchaProps)
 
     return (
         <ContentWrapper>
-            <CaptchaBox>
-                <TextContent ref={canvas} width={CANVAS_WIDTH} height={CANVAS_HEIGHT} />
-                <InputContent>
-                    <CaptchaInput placeholder='Type The text' onChange={e => onInputChange(e.target.value)} />
-                    <div onClick={() => reloadWords()} >
-                        <ReloadIcon className='fa-solid fa-rotate' />
-                    </div>
-                    <UnCaptchaInfo />
-                </InputContent>
-            </CaptchaBox>
+            <form onSubmit={onSubmit}>
+                <CaptchaBox>
+                    <TextContent ref={canvas} width={CANVAS_WIDTH} height={CANVAS_HEIGHT} />
+                    <BottomContent>
+                        <InputContent>
+                            <CaptchaInput placeholder='Type The text' value={input} onChange={e => setInput(e.target.value)} />
+                            <div onClick={() => reloadWords()} >
+                                <ReloadIcon className='fa-solid fa-rotate' />
+                            </div>
+                            <ContainedButton type='submit'>Submit</ContainedButton>
+                        </InputContent>
+                        <UnCaptchaInfo />
+                    </BottomContent>
+                </CaptchaBox>
+            </form>
         </ContentWrapper >
     );
 };

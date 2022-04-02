@@ -58,7 +58,7 @@ export const HeaderBar = ({ time, challengesCompleted }: HeaderBarProps) => {
             <StyledCenterContent>
                 <Time time={time}>{formatTime(time)}</Time>
                 <Headline5>Challenges Completed: {challengesCompleted}</Headline5>
-                <Headline5>Best: TODO</Headline5>
+                <Headline5>Challenges Completed: {challengesCompleted}</Headline5>
             </StyledCenterContent>
             <EndContent>
                 <NavText>
