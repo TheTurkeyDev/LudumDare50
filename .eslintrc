@@ -1,0 +1,65 @@
+{
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+        "@typescript-eslint",
+        "functional"
+    ],
+    "extends": [],
+    "parserOptions": {
+        "ecmaVersion": 2021,
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "jsx": true,
+            "tsx": true
+        },
+        "project": [
+            "./tsconfig.json"
+        ]
+    },
+    "env": {
+        "node": true,
+        "browser": true,
+        "commonjs": true
+    },
+    "rules": {
+        "indent": [
+            "error",
+            4,
+            {
+                "SwitchCase": 1
+            }
+        ],
+        "jsx-quotes": [
+            "error",
+            "prefer-single"
+        ],
+        "quotes": [
+            "error",
+            "single",
+            {
+                "avoidEscape": true
+            }
+        ],
+        "eqeqeq": 2,
+        "semi": 1,
+        "@typescript-eslint/consistent-type-definitions": [
+            "error",
+            "type"
+        ],
+        "functional/prefer-readonly-type": "error",
+        "functional/no-expression-statement": "off",
+        "functional/functional-parameters": "off",
+        "functional/no-return-void": "off",
+        "functional/no-let": "error",
+        "@typescript-eslint/no-explicit-any": "error"
+    },
+    "settings": {
+        "react": {
+            "version": "detect"
+        },
+        "import/resolver": "webpack"
+    },
+    "ignorePatterns": [
+        "rollup.config.js"
+    ]
+}
