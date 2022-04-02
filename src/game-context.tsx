@@ -3,7 +3,7 @@ import { createContext, useContext } from 'react';
 
 type GameContextType = {
     readonly start: () => void
-    readonly onChallengeComplete: () => void
+    readonly onChallengeComplete: (current: number) => void
     readonly addTime: (amount: number) => void
 }
 

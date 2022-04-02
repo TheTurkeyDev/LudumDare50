@@ -1,6 +1,7 @@
 import { BaseTheme, Body1, Body2, Caption, ContainedButton, Elevation, Headline5, Overline, Subtitle1 } from '@theturkeydev/gobble-lib-react';
 import { useEffect, useState } from 'react';
-import styled, { keyframes, ThemeProps } from 'styled-components';
+import styled, { css, keyframes, ThemeProps } from 'styled-components';
+import { Challenge } from '../challenges-enum';
 import { useGame } from '../game-context';
 import { UnCaptchaInfo } from './un-captcha-info';
 
@@ -48,12 +49,6 @@ const BottomContent = styled.div`
 `;
 
 
-const BounceCSS = keyframes`
-    0% { transform: translateY(0)}
-    50% { transform: translateY(-20px)}
-    100% { transform: translateY(0)}
-`;
-
 type BallProps = {
     readonly rotation: number
 }
@@ -64,7 +59,6 @@ const Ball = styled.div<BallProps>`
     border-radius: 64px;
     transition: 0.25s;
     transform: rotate(${({ rotation }) => rotation}deg);
-    animation: ${BounceCSS} .25s;
 
     display: grid;
     justify-items: center;
@@ -95,8 +89,12 @@ export const BallRollCaptcha = () => {
     const onSubmit = () => {
         if (rotation % 360 === 0) {
             addTime(100);
-            onChallengeComplete();
+            onChallengeComplete(Challenge.BallRollCaptcha);
         }
+    };
+
+    const rotate = (ammount: number) => {
+        setRotation(old => old + ammount);
     };
 
     return (
@@ -107,11 +105,11 @@ export const BallRollCaptcha = () => {
                     <Subtitle1>to roll the ball</Subtitle1>
                 </Header>
                 <TopContent>
-                    <ArrowIcon className='fa-solid fa-arrow-rotate-right' justify='end' onClick={() => setRotation(old => old + 20)} />
+                    <ArrowIcon className='fa-solid fa-arrow-rotate-right' justify='end' onClick={() => rotate(20)} />
                     <Ball rotation={rotation}>
                         <Body1>Image TODO</Body1>
                     </Ball>
-                    <ArrowIcon className='fa-solid fa-arrow-rotate-left' justify='start' onClick={() => setRotation(old => old - 20)} />
+                    <ArrowIcon className='fa-solid fa-arrow-rotate-left' justify='start' onClick={() => rotate(-20)} />
                 </TopContent>
                 <BottomContent>
                     <div />

@@ -1,6 +1,7 @@
 import { BaseTheme, Elevation, Input, TopLabeled } from '@theturkeydev/gobble-lib-react';
 import { createRef, useEffect, useState } from 'react';
 import styled, { ThemeProps } from 'styled-components';
+import { Challenge } from '../challenges-enum';
 import { useGame } from '../game-context';
 import { UnCaptchaInfo } from './un-captcha-info';
 
@@ -56,10 +57,16 @@ const ReloadIcon = styled.i`
 const CANVAS_WIDTH = 500;
 const CANVAS_HEIGHT = 100;
 
-export const WordInputCaptcha = () => {
+type WordInputCaptchaProps = {
+    readonly challengesCompleted: number
+}
+export const WordInputCaptcha = ({ challengesCompleted }: WordInputCaptchaProps) => {
     const canvas = createRef<HTMLCanvasElement>();
     const [shownLetters, setShownLetters] = useState('');
     const { addTime, onChallengeComplete } = useGame();
+
+    const lettersToUse = Math.min(9, 3 + Math.floor(challengesCompleted / 2));
+    const linesToUse = 5 + challengesCompleted;
 
     useEffect(() => {
         reloadCanvasContent();
@@ -73,7 +80,7 @@ export const WordInputCaptcha = () => {
     const onInputChange = (input: string) => {
         if (input.toUpperCase() === shownLetters) {
             addTime(100);
-            onChallengeComplete();
+            onChallengeComplete(Challenge.WordInputCaptcha);
         }
     };
 
@@ -94,16 +101,17 @@ export const WordInputCaptcha = () => {
         ctx.font = 'bolder 30px Arial';
         ctx.textAlign = 'center';
         ctx.translate(25, 50);
-        const l1 = drawRandomLetter(ctx, 25);
-        const l2 = drawRandomLetter(ctx, 75);
-        const l3 = drawRandomLetter(ctx, 125);
-        const l4 = drawRandomLetter(ctx, 175);
-        const l5 = drawRandomLetter(ctx, 225);
-        const l6 = drawRandomLetter(ctx, 275);
-        setShownLetters(l1 + l2 + l3 + l4 + l5 + l6);
-        ctx.translate(-25, -50);
+
+        const letters = Array(lettersToUse);
         // eslint-disable-next-line functional/no-let
-        for (let i = 0; i < 20; i++) {
+        for (let i = 0; i < lettersToUse; i++) {
+            letters[i] = drawRandomLetter(ctx, 25 + (50 * i));
+        }
+        setShownLetters(letters.join(''));
+        ctx.translate(-25, -50);
+
+        // eslint-disable-next-line functional/no-let
+        for (let i = 0; i < linesToUse; i++) {
             drawRandomDot(ctx);
             drawRandomLine(ctx);
             drawRandomDot(ctx);
