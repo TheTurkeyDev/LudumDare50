@@ -91,6 +91,12 @@ export const BallRollCaptcha = () => {
             addTime(100);
             onChallengeComplete(Challenge.BallRollCaptcha);
         }
+        else {
+            addTime(-50);
+            const rot = Math.random() * 360;
+            const adjRot = rot - (rot % 20);
+            setRotation(adjRot);
+        }
     };
 
     const rotate = (ammount: number) => {
