@@ -118,15 +118,26 @@ const images: readonly ImageType[] = [
 ];
 
 type ImageSingleCaptchaProps = {
+    readonly challengesCompleted: number
     readonly offset: string
 }
 
-export const ImageSingleCaptcha = ({ offset }: ImageSingleCaptchaProps) => {
+export const ImageSingleCaptcha = ({ challengesCompleted, offset }: ImageSingleCaptchaProps) => {
     const { addTime, onChallengeComplete } = useGame();
 
-    const [image, setImage] = useState<ImageType>(() => images[Math.floor(Math.random() * images.length)]);
+    const [image, setImage] = useState<ImageType>(images[Math.floor(Math.random() * images.length)]);
     const [selected, setSelected] = useState<readonly boolean[]>(() => Array(16).fill(false));
     const [wrong, setWrong] = useState(false);
+
+    useEffect(() => {
+        if (challengesCompleted > 15 && Math.random() > 0.5) {
+            setImage({
+                toSelect: 'boats',
+                image: images[Math.floor(Math.random() * images.length)].image,
+                answers: []
+            });
+        }
+    }, []);
 
     const reloadImage = () => {
         addTime(-10);
