@@ -93,7 +93,7 @@ export const BallRollCaptcha = ({ challengesCompleted, offset }: BallRollCaptcha
         e.preventDefault();
         if (rotation % 360 === 0) {
             if (completed + 1 === totalToComplete) {
-                addTime(5);
+                addTime(3);
                 onChallengeComplete(Challenge.BallRollCaptcha);
             }
             else {

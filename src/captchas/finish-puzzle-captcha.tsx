@@ -143,7 +143,7 @@ export const FinishPuzzleCaptcha = ({ challengesCompleted, offset }: FinishPuzzl
         e.preventDefault();
         const completed = !sliderData.some(s => Math.abs(s.xOffset - s.destX) > 5);
         if (completed) {
-            addTime(5);
+            addTime(3);
             onChallengeComplete(Challenge.PuzzleCaptcha);
         }
         else {

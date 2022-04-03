@@ -170,7 +170,7 @@ export const ImageMultiTypeCaptcha = ({ offset }: ImageMultiTypeCaptchaProps) =>
         const correct = !displayed.some(d => !(d.selected && group?.id === d.group) && !(!d.selected && group?.id !== d.group));
 
         if (correct) {
-            addTime(5);
+            addTime(3);
             onChallengeComplete(Challenge.ImageMultiSelectCaptcha);
         }
         else {

@@ -140,7 +140,7 @@ export const ImageSingleCaptcha = ({ offset }: ImageSingleCaptchaProps) => {
         const correct = !selected.some((s, i) => s !== image.answers.includes(i));
 
         if (correct) {
-            addTime(5);
+            addTime(3);
             onChallengeComplete(Challenge.ImageSingleCaptcha);
         }
         else {

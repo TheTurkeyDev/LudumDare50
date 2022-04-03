@@ -56,7 +56,7 @@ export const TypeChallenege = ({ challengesCompleted, offset }: MathChallenegePr
             return false;
 
         if (input === word) {
-            addTime(5);
+            addTime(3);
             onChallengeComplete(Challenge.TypeCallenge);
         }
         else {

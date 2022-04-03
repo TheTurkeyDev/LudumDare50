@@ -76,7 +76,7 @@ export const WordInputCaptcha = ({ challengesCompleted, offset }: WordInputCaptc
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (input.toUpperCase() === shownLetters) {
-            addTime(5);
+            addTime(3);
             onChallengeComplete(Challenge.WordInputCaptcha);
         }
         else {

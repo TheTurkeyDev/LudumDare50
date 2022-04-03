@@ -39,7 +39,7 @@ export const MathChallenege = ({ challengesCompleted, offset }: MathChallenegePr
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (parseInt(input) === numbers.reduce((prev, current) => prev + current, 0)) {
-            addTime(5);
+            addTime(3);
             onChallengeComplete(Challenge.MathCallenge);
         }
         else {
