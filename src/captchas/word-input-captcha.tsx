@@ -115,6 +115,8 @@ export const WordInputCaptcha = ({ challengesCompleted }: WordInputCaptchaProps)
             drawRandomDot(ctx);
             drawRandomLine(ctx);
             drawRandomDot(ctx);
+            drawRandomLine(ctx);
+            drawRandomDot(ctx);
         }
     };
 
