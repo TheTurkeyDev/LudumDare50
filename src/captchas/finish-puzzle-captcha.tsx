@@ -9,8 +9,6 @@ import { ContentBox, ContentWrapper } from '../styles/styles';
 import { UnCaptchaInfo } from './un-captcha-info';
 
 const CaptchaBox = styled(ContentBox)`
-    width: 500px;
-    height: 350px;
     display: grid;
     grid-template-rows: 200px auto 1fr;
     padding: 8px 16px;
@@ -78,9 +76,9 @@ type Square = {
 }
 
 type FinishPuzzleProps = {
-    readonly challengesCompleted: number
+    readonly offset: string
 }
-export const FinishPuzzleCaptcha = ({ challengesCompleted }: FinishPuzzleProps) => {
+export const FinishPuzzleCaptcha = ({ offset }: FinishPuzzleProps) => {
     const canvas = createRef<HTMLCanvasElement>();
     const { addTime, onChallengeComplete } = useGame();
 
@@ -89,6 +87,7 @@ export const FinishPuzzleCaptcha = ({ challengesCompleted }: FinishPuzzleProps) 
     const [destX, setDestX] = useState(150);
     const [colors, setColors] = useState<readonly string[]>([]);
     const [squares, setSquares] = useState<readonly Square[]>([]);
+    const [wrong, setWrong] = useState(false);
 
     const getAdjust = (base: number) => {
         return base + ((Math.random() * 10) - 5);
@@ -136,6 +135,7 @@ export const FinishPuzzleCaptcha = ({ challengesCompleted }: FinishPuzzleProps) 
             onChallengeComplete(Challenge.PuzzleCaptcha);
         }
         else {
+            setWrong(true);
             addTime(-10);
         }
     };
@@ -209,7 +209,7 @@ export const FinishPuzzleCaptcha = ({ challengesCompleted }: FinishPuzzleProps) 
     return (
         <ContentWrapper>
             <form onSubmit={onSubmit}>
-                <CaptchaBox>
+                <CaptchaBox width={500} height={350} offset={offset}>
                     <Canvas ref={canvas} width={CANVAS_WIDTH} height={CANVAS_HEIGHT} color1={colors[0]} color2={colors[1]} color3={colors[2]} />
                     <SliderWrapper>
                         <Slider type='range' value={xOffset} min='0' max={CANVAS_WIDTH - 50} onChange={e => setXOffset(parseInt(e.target.value))} />
@@ -217,7 +217,7 @@ export const FinishPuzzleCaptcha = ({ challengesCompleted }: FinishPuzzleProps) 
                     </SliderWrapper>
                     <BottomContent>
                         <InputContent>
-                            <ContainedButton type='submit'>Submit</ContainedButton>
+                            <ContainedButton className={wrong ? 'wrong' : ''} onAnimationEnd={() => setWrong(false)} type='submit'>Submit</ContainedButton>
                         </InputContent>
                         <UnCaptchaInfo />
                     </BottomContent>

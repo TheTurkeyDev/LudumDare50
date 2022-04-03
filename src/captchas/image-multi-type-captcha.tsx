@@ -6,8 +6,6 @@ import { useGame } from '../game-context';
 import { ContentBox, ContentWrapper } from '../styles/styles';
 
 const CaptchaBox = styled(ContentBox)`
-    width: 300px;
-    height: 450px;
     display: grid;
     grid-template-rows: auto 1fr auto;
     padding: 8px;
@@ -128,9 +126,14 @@ function rand(num: number) {
     return Math.floor(Math.random() * num);
 }
 
-export const ImageMultiTypeCaptcha = () => {
+type ImageMultiTypeCaptchaProps = {
+    readonly offset: string
+}
+
+export const ImageMultiTypeCaptcha = ({ offset }: ImageMultiTypeCaptchaProps) => {
     const [group, setGroup] = useState<Group>();
     const [displayed, setDisplayed] = useState<readonly Displayed[]>([]);
+    const [wrong, setWrong] = useState(false);
 
     const { addTime, onChallengeComplete } = useGame();
 
@@ -171,6 +174,7 @@ export const ImageMultiTypeCaptcha = () => {
             onChallengeComplete(Challenge.ImageMultiSelectCaptcha);
         }
         else {
+            setWrong(true);
             addTime(-10);
         }
     };
@@ -190,7 +194,7 @@ export const ImageMultiTypeCaptcha = () => {
     return (
         <ContentWrapper>
             <form onSubmit={onSubmit}>
-                <CaptchaBox>
+                <CaptchaBox width={300} height={450} offset={offset}>
                     <Title>
                         <StyledSubtitle1>Select all images with a</StyledSubtitle1>
                         <StyledHeadline5>{group?.display}</StyledHeadline5>
@@ -201,7 +205,7 @@ export const ImageMultiTypeCaptcha = () => {
                             displayed.map((d, i) => (
                                 <ImageDiv key={i} onClick={() => selectImage(i)} >
                                     <CheckIcon selected={d.selected} className='fa-solid fa-circle-check' />
-                                    <Image src={`/res/imgs/${d.image}`} selected={d.selected} />
+                                    <Image src={`./res/imgs/${d.image}`} selected={d.selected} />
                                 </ImageDiv>
                             ))
                         }
@@ -211,7 +215,7 @@ export const ImageMultiTypeCaptcha = () => {
                             <Icon className='fa-solid fa-arrow-rotate-right' onClick={() => reloadImage(true)} />
                             <Icon className='fa-solid fa-circle-info' />
                         </IconBar>
-                        <ContainedButton type='submit'>VERIFY</ContainedButton>
+                        <ContainedButton className={wrong ? 'wrong' : ''} onAnimationEnd={() => setWrong(false)} type='submit'>VERIFY</ContainedButton>
                     </Controlls>
                 </CaptchaBox>
             </form>

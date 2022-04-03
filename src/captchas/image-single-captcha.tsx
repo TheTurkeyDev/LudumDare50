@@ -6,8 +6,6 @@ import { useGame } from '../game-context';
 import { ContentBox, ContentWrapper } from '../styles/styles';
 
 const CaptchaBox = styled(ContentBox)`
-    width: 300px;
-    height: 450px;
     display: grid;
     grid-template-rows: auto 1fr auto;
     padding: 8px;
@@ -98,32 +96,37 @@ type ImageType = {
 }
 const images: readonly ImageType[] = [
     {
-        image: '/res/imgs/multi_select/img_1.jpg',
+        image: './res/imgs/multi_select/img_1.jpg',
         answers: [4, 8, 9, 13],
         toSelect: 'traffic lights'
     },
     {
-        image: '/res/imgs/multi_select/img_2.jpg',
+        image: './res/imgs/multi_select/img_2.jpg',
         answers: [8, 9, 10, 11, 12, 13, 14, 15],
         toSelect: 'street signs'
     },
     {
-        image: '/res/imgs/multi_select/img_3.jpg',
+        image: './res/imgs/multi_select/img_3.jpg',
         answers: [1, 2, 5, 6, 9, 10, 13, 14],
         toSelect: 'fire hydrant'
     },
     {
-        image: '/res/imgs/multi_select/img_4.jpg',
+        image: './res/imgs/multi_select/img_4.jpg',
         answers: [1, 2, 5, 6],
         toSelect: 'street sign'
     }
 ];
 
-export const ImageSingleCaptcha = () => {
+type ImageSingleCaptchaProps = {
+    readonly offset: string
+}
+
+export const ImageSingleCaptcha = ({ offset }: ImageSingleCaptchaProps) => {
     const { addTime, onChallengeComplete } = useGame();
 
     const [image, setImage] = useState<ImageType>(() => images[Math.floor(Math.random() * images.length)]);
     const [selected, setSelected] = useState<readonly boolean[]>(() => Array(16).fill(false));
+    const [wrong, setWrong] = useState(false);
 
     const reloadImage = () => {
         addTime(-10);
@@ -141,6 +144,7 @@ export const ImageSingleCaptcha = () => {
             onChallengeComplete(Challenge.ImageSingleCaptcha);
         }
         else {
+            setWrong(true);
             addTime(-10);
         }
     };
@@ -156,7 +160,7 @@ export const ImageSingleCaptcha = () => {
     return (
         <ContentWrapper>
             <form onSubmit={onSubmit}>
-                <CaptchaBox>
+                <CaptchaBox width={300} height={450} offset={offset}>
                     <Title>
                         <StyledSubtitle1>Select all images with</StyledSubtitle1>
                         <StyledHeadline5>{image.toSelect}</StyledHeadline5>
@@ -176,7 +180,7 @@ export const ImageSingleCaptcha = () => {
                             <Icon className='fa-solid fa-arrow-rotate-right' onClick={() => reloadImage()} />
                             <Icon className='fa-solid fa-circle-info' />
                         </IconBar>
-                        <ContainedButton type='submit'>VERIFY</ContainedButton>
+                        <ContainedButton className={wrong ? 'wrong' : ''} onAnimationEnd={() => setWrong(false)} type='submit'>VERIFY</ContainedButton>
                     </Controlls>
                 </CaptchaBox>
             </form>

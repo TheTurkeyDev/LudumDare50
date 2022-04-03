@@ -1,14 +1,12 @@
 import { BaseTheme, Body1, ContainedButton, Headline5, Subtitle1 } from '@theturkeydev/gobble-lib-react';
 import { useState } from 'react';
-import styled, { ThemeProps } from 'styled-components';
+import styled, { keyframes, ThemeProps } from 'styled-components';
 import { Challenge } from '../challenges-enum';
 import { useGame } from '../game-context';
 import { ContentBox, ContentWrapper } from '../styles/styles';
 import { UnCaptchaInfo } from './un-captcha-info';
 
 const CaptchaBox = styled(ContentBox)`
-    width: 400px;
-    height: 300px;
     display: grid;
     grid-template-rows: auto 1fr auto;
     padding: 8px 16px;
@@ -71,14 +69,20 @@ const ArrowIcon = styled.i<ArrowIconProps>`
     }
 `;
 
-const images = ['/res/imgs/elephant.png', '/res/imgs/penguin.png'];
+const images = ['./res/imgs/elephant.png', './res/imgs/penguin.png'];
 
-export const BallRollCaptcha = () => {
+type BallRollCaptchaProps = {
+    readonly offset: string
+}
+
+export const BallRollCaptcha = ({ offset }: BallRollCaptchaProps) => {
     const { onChallengeComplete, addTime } = useGame();
 
     const rot = Math.random() * 360;
     const adjRot = rot - (rot % 20);
     const [rotation, setRotation] = useState(adjRot);
+    const [bounce, setBounce] = useState(false);
+    const [wrong, setWrong] = useState(false);
 
     const [animalImage, setAnimalImage] = useState(() => images[Math.floor(Math.random() * images.length)]);
 
@@ -89,6 +93,7 @@ export const BallRollCaptcha = () => {
             onChallengeComplete(Challenge.BallRollCaptcha);
         }
         else {
+            setWrong(true);
             addTime(-10);
             const rot = Math.random() * 360;
             const adjRot = rot - (rot % 20);
@@ -97,27 +102,30 @@ export const BallRollCaptcha = () => {
     };
 
     const rotate = (ammount: number) => {
+        setBounce(true);
         setRotation(old => old + ammount);
     };
 
     return (
         <ContentWrapper>
             <form onSubmit={onSubmit}>
-                <CaptchaBox>
+                <CaptchaBox width={400} height={300} offset={offset}>
                     <Header>
                         <Headline5>Touch the Arrows</Headline5>
                         <Subtitle1>to roll the ball</Subtitle1>
                     </Header>
                     <TopContent>
                         <ArrowIcon className='fa-solid fa-arrow-rotate-right' justify='end' onClick={() => rotate(20)} />
-                        <Ball rotation={rotation}>
-                            <Image src={animalImage} />
-                        </Ball>
+                        <div className={bounce ? 'bounce' : ''} onAnimationEnd={() => setBounce(false)}>
+                            <Ball rotation={rotation}>
+                                <Image src={animalImage} />
+                            </Ball>
+                        </div>
                         <ArrowIcon className='fa-solid fa-arrow-rotate-left' justify='start' onClick={() => rotate(-20)} />
                     </TopContent>
                     <BottomContent>
                         <div />
-                        <ContainedButton type='submit'>Submit</ContainedButton>
+                        <ContainedButton className={wrong ? 'wrong' : ''} onAnimationEnd={() => setWrong(false)} type='submit'>Submit</ContainedButton>
                         <UnCaptchaInfo />
                     </BottomContent>
                 </CaptchaBox>

@@ -7,9 +7,6 @@ import { ContentWrapper, ContentBox } from '../styles/styles';
 
 
 const ChallenegeBox = styled(ContentBox)`
-    width: 400px;
-    height: 150px;
-
     display: grid;
     grid-template-rows: auto;
     padding: 8px 16px;
@@ -20,15 +17,17 @@ const ChallenegeBox = styled(ContentBox)`
 
 type MathChallenegeProps = {
     readonly challengesCompleted: number
+    readonly offset: string
 }
 
-export const TypeChallenege = ({ challengesCompleted }: MathChallenegeProps) => {
+export const TypeChallenege = ({ challengesCompleted, offset }: MathChallenegeProps) => {
 
     const { onChallengeComplete, addTime } = useGame();
 
     const [input, setInput] = useState('');
     const [loading, setLoading] = useState(false);
     const [word, setWord] = useState('');
+    const [wrong, setWrong] = useState(false);
 
     const generateWord = () => {
         const length = 3 + Math.floor(challengesCompleted / 3);
@@ -61,6 +60,7 @@ export const TypeChallenege = ({ challengesCompleted }: MathChallenegeProps) => 
             onChallengeComplete(Challenge.TypeCallenge);
         }
         else {
+            setWrong(true);
             generateWord();
             addTime(-10);
         }
@@ -70,7 +70,7 @@ export const TypeChallenege = ({ challengesCompleted }: MathChallenegeProps) => 
     return (
         <ContentWrapper>
             <form onSubmit={onSubmit}>
-                <ChallenegeBox>
+                <ChallenegeBox width={400} height={150} offset={offset}>
                     <Headline5>
                         <u>
                             Please type in the given word
@@ -83,7 +83,7 @@ export const TypeChallenege = ({ challengesCompleted }: MathChallenegeProps) => 
                         }
                     </Headline6>
                     <input type='text' value={input} onChange={e => setInput(e.target.value)} />
-                    <ContainedButton type='submit'>Submit</ContainedButton>
+                    <ContainedButton className={wrong ? 'wrong' : ''} onAnimationEnd={() => setWrong(false)} type='submit'>Submit</ContainedButton>
                 </ChallenegeBox>
             </form>
         </ContentWrapper>

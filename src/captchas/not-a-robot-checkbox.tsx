@@ -11,9 +11,6 @@ const StyledContentWrapper = styled(ContentWrapper)`
 `;
 
 const CaptchaBox = styled(ContentBox)`
-    width: 400px;
-    height: 100px;
-
     display: grid;
     grid-template-columns: auto 1fr auto;
     padding: 8px 16px;
@@ -44,21 +41,19 @@ const Title = styled.div`
 `;
 
 export const NotARobotCheckBox = () => {
-
     const { start } = useGame();
 
     return (
         <StyledContentWrapper>
             <TextWrapper>
                 <Title>
-                    <Headline3>Welcome to <u>I'm Not A Bot</u>!</Headline3>
+                    <Headline3>Welcome to <u>I'm Not A Robot</u>!</Headline3>
                     <Headline5>A game made in 48 hours for Ludum Dare 50</Headline5>
                 </Title>
                 <Body1>
-                    We've all been there and we all know the pain when we see the dreaded
+                    We've all been there, and we all know the pain when we see a dreaded
                     Captcha pop up on our screen. Yet another check to make sure we aren't
-                    a bot. Pretty sure now-a-days bots are better at completing these than
-                    we as humans are. Alas, Captchas seem to be here to stay and new versions
+                    a bot. Alas, Captchas seem to be here to stay and new versions
                     seem to pop up all the time, but what if we could make completing
                     Captchas fun? Well that's probably not possible, but I have attempted
                     to do that nonetheless! In this game your whole objective is to
@@ -73,8 +68,8 @@ export const NotARobotCheckBox = () => {
                     Verify that you aren't a bot below to begin...
                 </Body1>
             </TextWrapper>
-            <CaptchaBox>
-                <CheckBox onClick={() => start()}></CheckBox>
+            <CaptchaBox width={250} height={100} offset='50%'>
+                <CheckBox onClick={() => start()} />
                 <Body1>I'm not a robot</Body1>
                 <UnCaptchaInfo />
             </CaptchaBox>

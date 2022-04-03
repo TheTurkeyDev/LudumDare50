@@ -7,8 +7,6 @@ import { ContentBox, ContentWrapper } from '../styles/styles';
 import { UnCaptchaInfo } from './un-captcha-info';
 
 const CaptchaBox = styled(ContentBox)`
-    width: 500px;
-    height: 200px;
     display: grid;
     grid-template-rows: 100px 1fr;
     padding: 8px 16px;
@@ -54,12 +52,14 @@ const CANVAS_HEIGHT = 100;
 
 type WordInputCaptchaProps = {
     readonly challengesCompleted: number
+    readonly offset: string
 }
-export const WordInputCaptcha = ({ challengesCompleted }: WordInputCaptchaProps) => {
+export const WordInputCaptcha = ({ challengesCompleted, offset }: WordInputCaptchaProps) => {
     const canvas = createRef<HTMLCanvasElement>();
     const [shownLetters, setShownLetters] = useState('');
     const { addTime, onChallengeComplete } = useGame();
     const [input, setInput] = useState('');
+    const [wrong, setWrong] = useState(false);
 
     const lettersToUse = Math.min(9, 3 + Math.floor(challengesCompleted / 3));
     const linesToUse = 5 + challengesCompleted;
@@ -80,6 +80,7 @@ export const WordInputCaptcha = ({ challengesCompleted }: WordInputCaptchaProps)
             onChallengeComplete(Challenge.WordInputCaptcha);
         }
         else {
+            setWrong(true);
             reloadWords();
         }
     };
@@ -158,7 +159,7 @@ export const WordInputCaptcha = ({ challengesCompleted }: WordInputCaptchaProps)
     return (
         <ContentWrapper>
             <form onSubmit={onSubmit}>
-                <CaptchaBox>
+                <CaptchaBox width={500} height={200} offset={offset}>
                     <TextContent ref={canvas} width={CANVAS_WIDTH} height={CANVAS_HEIGHT} />
                     <BottomContent>
                         <InputContent>
@@ -166,7 +167,7 @@ export const WordInputCaptcha = ({ challengesCompleted }: WordInputCaptchaProps)
                             <div onClick={() => reloadWords()} >
                                 <ReloadIcon className='fa-solid fa-rotate' />
                             </div>
-                            <ContainedButton type='submit'>Submit</ContainedButton>
+                            <ContainedButton className={wrong ? 'wrong' : ''} onAnimationEnd={() => setWrong(false)} type='submit'>Submit</ContainedButton>
                         </InputContent>
                         <UnCaptchaInfo />
                     </BottomContent>

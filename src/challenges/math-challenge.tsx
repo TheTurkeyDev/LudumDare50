@@ -7,9 +7,6 @@ import { ContentWrapper, ContentBox } from '../styles/styles';
 
 
 const ChallenegeBox = styled(ContentBox)`
-    width: 400px;
-    height: 150px;
-
     display: grid;
     grid-template-rows: auto;
     padding: 8px 16px;
@@ -20,19 +17,21 @@ const ChallenegeBox = styled(ContentBox)`
 
 type MathChallenegeProps = {
     readonly challengesCompleted: number
+    readonly offset: string
 }
 
 function generateRandNumber(challengesCompleted: number) {
     return Math.floor(5 + (Math.random() * ((5 * challengesCompleted) - 5)));
 };
 
-export const MathChallenege = ({ challengesCompleted }: MathChallenegeProps) => {
+export const MathChallenege = ({ challengesCompleted, offset }: MathChallenegeProps) => {
 
     const { onChallengeComplete, addTime } = useGame();
 
     const [input, setInput] = useState('');
     const [num1, setNum1] = useState(generateRandNumber(challengesCompleted));
     const [num2, setNum2] = useState(generateRandNumber(challengesCompleted));
+    const [wrong, setWrong] = useState(false);
 
     const generateMath = () => {
         setNum1(generateRandNumber(challengesCompleted));
@@ -46,6 +45,7 @@ export const MathChallenege = ({ challengesCompleted }: MathChallenegeProps) => 
             onChallengeComplete(Challenge.MathCallenge);
         }
         else {
+            setWrong(true);
             generateMath();
             addTime(-10);
         }
@@ -54,7 +54,7 @@ export const MathChallenege = ({ challengesCompleted }: MathChallenegeProps) => 
     return (
         <ContentWrapper>
             <form onSubmit={onSubmit}>
-                <ChallenegeBox>
+                <ChallenegeBox width={400} height={150} offset={offset}>
                     <Headline5>
                         <u>
                             Please solve the math equation
@@ -64,7 +64,7 @@ export const MathChallenege = ({ challengesCompleted }: MathChallenegeProps) => 
                         {num1} + {num2}
                     </Headline6>
                     <input type='number' placeholder='answer' value={input} onChange={e => setInput(e.target.value)} />
-                    <ContainedButton type='submit'>Submit</ContainedButton>
+                    <ContainedButton className={wrong ? 'wrong' : ''} onAnimationEnd={() => setWrong(false)} type='submit'>Submit</ContainedButton>
                 </ChallenegeBox>
             </form>
         </ContentWrapper>
