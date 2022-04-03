@@ -1,7 +1,7 @@
-import { BaseTheme, Body1, Headline3, Headline5 } from '@theturkeydev/gobble-lib-react';
+import { BaseTheme, Body1, Headline3, Headline5, Elevation } from '@theturkeydev/gobble-lib-react';
 import styled, { ThemeProps } from 'styled-components';
 import { useGame } from '../game-context';
-import { ContentBox, ContentWrapper } from '../styles/styles';
+import { ContentWrapper } from '../styles/styles';
 import { UnCaptchaInfo } from './un-captcha-info';
 
 const StyledContentWrapper = styled(ContentWrapper)`
@@ -10,12 +10,20 @@ const StyledContentWrapper = styled(ContentWrapper)`
     grid-template-rows: 1fr 1fr;
 `;
 
-const CaptchaBox = styled(ContentBox)`
+const CaptchaBox = styled.div`
+    background-color: ${({ theme }: ThemeProps<BaseTheme>) => theme.surface.color};
+    border: 1px solid ${({ theme }: ThemeProps<BaseTheme>) => theme.inputs.outlineRaised};
+    box-shadow: ${Elevation.lowest};
+    border-radius: 5px;
+    width:350px;
+    height: 100px;
     display: grid;
     grid-template-columns: auto 1fr auto;
     padding: 8px 16px;
     align-items: center;
     gap: 16px;
+    margin-inline: auto;
+    margin-top: 16px;
 `;
 
 const CheckBox = styled.div`
@@ -68,7 +76,7 @@ export const NotARobotCheckBox = () => {
                     Verify that you aren't a bot below to begin...
                 </Body1>
             </TextWrapper>
-            <CaptchaBox width={350} height={100} offset='50%'>
+            <CaptchaBox>
                 <CheckBox onClick={() => start()} />
                 <Body1>I'm not a robot</Body1>
                 <UnCaptchaInfo />

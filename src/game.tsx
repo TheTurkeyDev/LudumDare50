@@ -70,8 +70,8 @@ export const Game = () => {
     const challenge = useMemo(() => getChallengeToShow(shownCaptcha, challengesCompleted), [shownCaptcha, challengesCompleted]);
 
     useInterval(() => {
-        // if (start)
-        //     setTimeLeft(old => old - 1);
+        if (start)
+            setTimeLeft(old => old - 1);
     }, 100);
 
     useEffect(() => {
