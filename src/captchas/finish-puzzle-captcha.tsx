@@ -132,8 +132,11 @@ export const FinishPuzzleCaptcha = ({ challengesCompleted }: FinishPuzzleProps) 
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (Math.abs(xOffset - destX) < 5) {
-            addTime(10);
+            addTime(5);
             onChallengeComplete(Challenge.PuzzleCaptcha);
+        }
+        else {
+            addTime(-10);
         }
     };
 

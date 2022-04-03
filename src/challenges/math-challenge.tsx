@@ -42,12 +42,12 @@ export const MathChallenege = ({ challengesCompleted }: MathChallenegeProps) => 
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (parseInt(input) === num1 + num2) {
-            addTime(10);
+            addTime(5);
             onChallengeComplete(Challenge.MathCallenge);
         }
         else {
             generateMath();
-            addTime(-5);
+            addTime(-10);
         }
     };
 

@@ -53,6 +53,11 @@ const Ball = styled.div<BallProps>`
     align-items: center;
 `;
 
+const Image = styled.img`
+    max-width: 96px;
+    max-height: 96px;
+`;
+
 
 type ArrowIconProps = {
     readonly justify: string
@@ -66,22 +71,25 @@ const ArrowIcon = styled.i<ArrowIconProps>`
     }
 `;
 
-export const BallRollCaptcha = () => {
+const images = ['/res/imgs/elephant.png', '/res/imgs/penguin.png'];
 
+export const BallRollCaptcha = () => {
     const { onChallengeComplete, addTime } = useGame();
 
     const rot = Math.random() * 360;
     const adjRot = rot - (rot % 20);
     const [rotation, setRotation] = useState(adjRot);
 
+    const [animalImage, setAnimalImage] = useState(() => images[Math.floor(Math.random() * images.length)]);
+
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (rotation % 360 === 0) {
-            addTime(10);
+            addTime(5);
             onChallengeComplete(Challenge.BallRollCaptcha);
         }
         else {
-            addTime(-5);
+            addTime(-10);
             const rot = Math.random() * 360;
             const adjRot = rot - (rot % 20);
             setRotation(adjRot);
@@ -103,7 +111,7 @@ export const BallRollCaptcha = () => {
                     <TopContent>
                         <ArrowIcon className='fa-solid fa-arrow-rotate-right' justify='end' onClick={() => rotate(20)} />
                         <Ball rotation={rotation}>
-                            <Body1>Image TODO</Body1>
+                            <Image src={animalImage} />
                         </Ball>
                         <ArrowIcon className='fa-solid fa-arrow-rotate-left' justify='start' onClick={() => rotate(-20)} />
                     </TopContent>

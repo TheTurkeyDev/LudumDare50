@@ -47,8 +47,9 @@ const formatTime = (time: number) => {
 type HeaderBarProps = {
     readonly time: number
     readonly challengesCompleted: number
+    readonly highScore: string
 }
-export const HeaderBar = ({ time, challengesCompleted }: HeaderBarProps) => {
+export const HeaderBar = ({ time, challengesCompleted, highScore }: HeaderBarProps) => {
     const { theme, setTheme } = useThemeContext();
     const isDarkTheme = theme === 'dark';
 
@@ -58,7 +59,7 @@ export const HeaderBar = ({ time, challengesCompleted }: HeaderBarProps) => {
             <StyledCenterContent>
                 <Time time={time}>{formatTime(time)}</Time>
                 <Headline5>Challenges Completed: {challengesCompleted}</Headline5>
-                <Headline5>Challenges Completed: {challengesCompleted}</Headline5>
+                <Headline5>High Score: {highScore}</Headline5>
             </StyledCenterContent>
             <EndContent>
                 <NavText>

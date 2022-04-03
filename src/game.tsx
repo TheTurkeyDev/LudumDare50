@@ -1,6 +1,8 @@
 import { useInterval } from '@theturkeydev/gobble-lib-react';
 import { useEffect, useMemo, useState } from 'react';
 import { FinishPuzzleCaptcha } from './captchas/finish-puzzle-captcha';
+import { ImageMultiTypeCaptcha } from './captchas/image-multi-type-captcha';
+import { ImageSingleCaptcha } from './captchas/image-single-captcha';
 import { NotARobotCheckBox } from './captchas/not-a-robot-checkbox';
 import { BallRollCaptcha } from './captchas/roll-ball-captcha';
 import { WordInputCaptcha } from './captchas/word-input-captcha';
@@ -14,8 +16,9 @@ export const Game = () => {
 
     const [shownCaptcha, setShownCaptcha] = useState(Challenge.NotARobotCaptcha);
     const [start, setStart] = useState(false);
-    const [timeLeft, setTimeLeft] = useState(600);
+    const [timeLeft, setTimeLeft] = useState(300);
     const [challengesCompleted, setChallengesCompleted] = useState(0);
+    const [highScore, setHighScore] = useState(() => localStorage.getItem('highScore') ?? '0');
 
     const contextVals = useMemo(() => { return { start: startGame, addTime, onChallengeComplete }; }, []);
     const challenge = useMemo(() => getChallengeToShow(shownCaptcha, challengesCompleted), [shownCaptcha, challengesCompleted]);
@@ -27,6 +30,7 @@ export const Game = () => {
 
     useEffect(() => {
         if (timeLeft <= 0) {
+            localStorage.setItem('highScore', challengesCompleted.toString());
             window.location.reload();
             setStart(false);
         }
@@ -35,7 +39,7 @@ export const Game = () => {
 
     function startGame() {
         setStart(true);
-        setShownCaptcha(Challenge.PuzzleCaptcha);
+        setShownCaptcha(Challenge.ImageSingleCaptcha);
     };
 
 
@@ -57,6 +61,10 @@ export const Game = () => {
                 return <TypeChallenege challengesCompleted={challengesCompleted} />;
             case Challenge.PuzzleCaptcha:
                 return <FinishPuzzleCaptcha challengesCompleted={challengesCompleted} />;
+            case Challenge.ImageMultiSelectCaptcha:
+                return <ImageMultiTypeCaptcha />;
+            case Challenge.ImageSingleCaptcha:
+                return <ImageSingleCaptcha />;
         }
     };
 
@@ -68,7 +76,7 @@ export const Game = () => {
 
     return (
         <GameContext.Provider value={contextVals}>
-            <HeaderBar challengesCompleted={challengesCompleted} time={timeLeft} />
+            <HeaderBar challengesCompleted={challengesCompleted} time={timeLeft} highScore={highScore} />
             {challenge}
         </GameContext.Provider>
     );

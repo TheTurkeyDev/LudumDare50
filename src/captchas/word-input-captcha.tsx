@@ -69,14 +69,14 @@ export const WordInputCaptcha = ({ challengesCompleted }: WordInputCaptchaProps)
     }, []);
 
     const reloadWords = () => {
-        addTime(-5);
+        addTime(-10);
         reloadCanvasContent();
     };
 
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (input.toUpperCase() === shownLetters) {
-            addTime(10);
+            addTime(5);
             onChallengeComplete(Challenge.WordInputCaptcha);
         }
         else {

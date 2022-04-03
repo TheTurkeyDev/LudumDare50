@@ -5,4 +5,6 @@ export enum Challenge {
     MathCallenge = 3,
     TypeCallenge = 4,
     PuzzleCaptcha = 5,
+    ImageMultiSelectCaptcha = 6,
+    ImageSingleCaptcha = 7,
 }

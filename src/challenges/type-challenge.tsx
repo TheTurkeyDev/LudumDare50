@@ -57,12 +57,12 @@ export const TypeChallenege = ({ challengesCompleted }: MathChallenegeProps) => 
             return false;
 
         if (input === word) {
-            addTime(10);
+            addTime(5);
             onChallengeComplete(Challenge.TypeCallenge);
         }
         else {
             generateWord();
-            addTime(-5);
+            addTime(-10);
         }
         return false;
     };
