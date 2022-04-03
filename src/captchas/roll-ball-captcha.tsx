@@ -72,10 +72,11 @@ const ArrowIcon = styled.i<ArrowIconProps>`
 const images = ['./res/imgs/elephant.png', './res/imgs/penguin.png'];
 
 type BallRollCaptchaProps = {
+    readonly challengesCompleted: number
     readonly offset: string
 }
 
-export const BallRollCaptcha = ({ offset }: BallRollCaptchaProps) => {
+export const BallRollCaptcha = ({ challengesCompleted, offset }: BallRollCaptchaProps) => {
     const { onChallengeComplete, addTime } = useGame();
 
     const rot = Math.random() * 360;
@@ -83,22 +84,35 @@ export const BallRollCaptcha = ({ offset }: BallRollCaptchaProps) => {
     const [rotation, setRotation] = useState(adjRot);
     const [bounce, setBounce] = useState(false);
     const [wrong, setWrong] = useState(false);
+    const [totalToComplete, setTotalToComplete] = useState(() => 1 + Math.floor(challengesCompleted / 8));
+    const [completed, setCompleted] = useState(0);
 
     const [animalImage, setAnimalImage] = useState(() => images[Math.floor(Math.random() * images.length)]);
 
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (rotation % 360 === 0) {
-            addTime(5);
-            onChallengeComplete(Challenge.BallRollCaptcha);
+            if (completed + 1 === totalToComplete) {
+                addTime(5);
+                onChallengeComplete(Challenge.BallRollCaptcha);
+            }
+            else {
+                setCompleted(old => old + 1);
+                randomRotate();
+            }
         }
         else {
             setWrong(true);
             addTime(-10);
-            const rot = Math.random() * 360;
-            const adjRot = rot - (rot % 20);
-            setRotation(adjRot);
+            randomRotate();
         }
+    };
+
+    const randomRotate = () => {
+        const rot = Math.random() * 360;
+        const adjRot = rot - (rot % 20);
+        setRotation(adjRot);
+        setAnimalImage(images[Math.floor(Math.random() * images.length)]);
     };
 
     const rotate = (ammount: number) => {
@@ -124,7 +138,7 @@ export const BallRollCaptcha = ({ offset }: BallRollCaptchaProps) => {
                         <ArrowIcon className='fa-solid fa-arrow-rotate-left' justify='start' onClick={() => rotate(-20)} />
                     </TopContent>
                     <BottomContent>
-                        <div />
+                        <Headline5>{completed + 1} of {totalToComplete}</Headline5>
                         <ContainedButton className={wrong ? 'wrong' : ''} onAnimationEnd={() => setWrong(false)} type='submit'>Submit</ContainedButton>
                         <UnCaptchaInfo />
                     </BottomContent>

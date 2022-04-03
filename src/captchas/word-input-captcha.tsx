@@ -81,6 +81,7 @@ export const WordInputCaptcha = ({ challengesCompleted, offset }: WordInputCaptc
         }
         else {
             setWrong(true);
+            setInput('');
             reloadWords();
         }
     };

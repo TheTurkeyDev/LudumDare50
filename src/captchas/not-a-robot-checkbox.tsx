@@ -68,7 +68,7 @@ export const NotARobotCheckBox = () => {
                     Verify that you aren't a bot below to begin...
                 </Body1>
             </TextWrapper>
-            <CaptchaBox width={250} height={100} offset='50%'>
+            <CaptchaBox width={350} height={100} offset='50%'>
                 <CheckBox onClick={() => start()} />
                 <Body1>I'm not a robot</Body1>
                 <UnCaptchaInfo />

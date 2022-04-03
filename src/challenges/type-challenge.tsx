@@ -41,7 +41,7 @@ export const TypeChallenege = ({ challengesCompleted, offset }: MathChallenegePr
                 setWord(word);
                 setLoading(false);
             }).catch(() => {
-                setWord('problem');
+                setWord('effectiveness');
                 setLoading(false);
             });
     };
@@ -63,6 +63,7 @@ export const TypeChallenege = ({ challengesCompleted, offset }: MathChallenegePr
             setWrong(true);
             generateWord();
             addTime(-10);
+            setInput('');
         }
         return false;
     };

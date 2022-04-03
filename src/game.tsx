@@ -92,7 +92,7 @@ export const Game = () => {
         setStart(true);
         const toChoose = Object.keys(Challenge).filter(i => !isNaN(Number(i))).map(i => parseInt(i));
         setShownCaptcha(toChoose[Math.floor(Math.random() * toChoose.length)]);
-        //setShownCaptcha(Challenge.BallRollCaptcha);
+        //setShownCaptcha(Challenge.ImageMultiSelectCaptcha);
     };
 
 
@@ -107,13 +107,13 @@ export const Game = () => {
             case Challenge.WordInputCaptcha:
                 return <WordInputCaptcha challengesCompleted={challengesCompleted} offset={offset} />;
             case Challenge.BallRollCaptcha:
-                return <BallRollCaptcha offset={offset} />;
+                return <BallRollCaptcha challengesCompleted={challengesCompleted} offset={offset} />;
             case Challenge.MathCallenge:
                 return <MathChallenege challengesCompleted={challengesCompleted} offset={offset} />;
             case Challenge.TypeCallenge:
                 return <TypeChallenege challengesCompleted={challengesCompleted} offset={offset} />;
             case Challenge.PuzzleCaptcha:
-                return <FinishPuzzleCaptcha offset={offset} />;
+                return <FinishPuzzleCaptcha challengesCompleted={challengesCompleted} offset={offset} />;
             case Challenge.ImageMultiSelectCaptcha:
                 return <ImageMultiTypeCaptcha offset={offset} />;
             case Challenge.ImageSingleCaptcha:

@@ -21,33 +21,32 @@ type MathChallenegeProps = {
 }
 
 function generateRandNumber(challengesCompleted: number) {
-    return Math.floor(5 + (Math.random() * ((5 * challengesCompleted) - 5)));
+    return Math.floor(Math.random() * 10);
 };
+
+function generateMath(completed: number) {
+    return Array.from({ length: 2 + Math.floor(completed / 8) }, () => generateRandNumber(completed));
+}
 
 export const MathChallenege = ({ challengesCompleted, offset }: MathChallenegeProps) => {
 
     const { onChallengeComplete, addTime } = useGame();
 
     const [input, setInput] = useState('');
-    const [num1, setNum1] = useState(generateRandNumber(challengesCompleted));
-    const [num2, setNum2] = useState(generateRandNumber(challengesCompleted));
+    const [numbers, setNumbers] = useState(() => generateMath(challengesCompleted));
     const [wrong, setWrong] = useState(false);
-
-    const generateMath = () => {
-        setNum1(generateRandNumber(challengesCompleted));
-        setNum2(generateRandNumber(challengesCompleted));
-    };
 
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (parseInt(input) === num1 + num2) {
+        if (parseInt(input) === numbers.reduce((prev, current) => prev + current, 0)) {
             addTime(5);
             onChallengeComplete(Challenge.MathCallenge);
         }
         else {
             setWrong(true);
-            generateMath();
+            setNumbers(generateMath(challengesCompleted));
             addTime(-10);
+            setInput('');
         }
     };
 
@@ -60,9 +59,7 @@ export const MathChallenege = ({ challengesCompleted, offset }: MathChallenegePr
                             Please solve the math equation
                         </u>
                     </Headline5>
-                    <Headline6>
-                        {num1} + {num2}
-                    </Headline6>
+                    <Headline6> {numbers.join(' + ')} </Headline6>
                     <input type='number' placeholder='answer' value={input} onChange={e => setInput(e.target.value)} />
                     <ContainedButton className={wrong ? 'wrong' : ''} onAnimationEnd={() => setWrong(false)} type='submit'>Submit</ContainedButton>
                 </ChallenegeBox>

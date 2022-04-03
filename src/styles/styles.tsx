@@ -24,7 +24,7 @@ export const ContentBox = styled.div<ContentBoxProps>`
 `;
 
 export function getRandOffset(completed: number) {
-    const mult = Math.min(completed / 10, 1) * 60;
+    const mult = Math.min(completed / 10, 1) * 50;
     const offSet = (Math.random() * mult) - (mult / 2);
     return `${50 - offSet}% `;
 }

@@ -75,16 +75,22 @@ type Square = {
     readonly color: string
 }
 
+type SliderData = {
+    readonly xOffset: number
+    readonly yOffset: number
+    readonly destX: number
+}
+
 type FinishPuzzleProps = {
     readonly offset: string
+    readonly challengesCompleted: number
 }
-export const FinishPuzzleCaptcha = ({ offset }: FinishPuzzleProps) => {
+
+export const FinishPuzzleCaptcha = ({ challengesCompleted, offset }: FinishPuzzleProps) => {
     const canvas = createRef<HTMLCanvasElement>();
     const { addTime, onChallengeComplete } = useGame();
 
-    const [yOffset, setYOffset] = useState(0);
-    const [xOffset, setXOffset] = useState(0);
-    const [destX, setDestX] = useState(150);
+    const [sliderData, setSliderData] = useState<readonly SliderData[]>([]);
     const [colors, setColors] = useState<readonly string[]>([]);
     const [squares, setSquares] = useState<readonly Square[]>([]);
     const [wrong, setWrong] = useState(false);
@@ -94,8 +100,13 @@ export const FinishPuzzleCaptcha = ({ offset }: FinishPuzzleProps) => {
     };
 
     useEffect(() => {
-        setYOffset(25 + Math.floor(Math.random() * (CANVAS_HEIGHT - 75)));
-        setDestX(300 + Math.floor(Math.random() * 150));
+        setSliderData(Array.from({ length: 1 + Math.floor(challengesCompleted / 10) }, () => {
+            return {
+                xOffset: 0,
+                yOffset: 25 + Math.floor(Math.random() * (CANVAS_HEIGHT - 75)),
+                destX: 300 + Math.floor(Math.random() * 150),
+            };
+        }));
         const c1 = getRandColor([]);
         const c2 = getRandColor([c1]);
         const c3 = getRandColor([c1, c2]);
@@ -126,11 +137,12 @@ export const FinishPuzzleCaptcha = ({ offset }: FinishPuzzleProps) => {
 
     useEffect(() => {
         reloadCanvasContent();
-    }, [xOffset, yOffset, destX]);
+    }, [sliderData]);
 
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (Math.abs(xOffset - destX) < 5) {
+        const completed = !sliderData.some(s => Math.abs(s.xOffset - s.destX) > 5);
+        if (completed) {
             addTime(5);
             onChallengeComplete(Challenge.PuzzleCaptcha);
         }
@@ -158,12 +170,15 @@ export const FinishPuzzleCaptcha = ({ offset }: FinishPuzzleProps) => {
             drawRandomsqaure(ctx, squares[square]);
         }
 
-        drawPuzzlePiece(ctx, destX, '#00000088');
-        drawPuzzlePiece(ctx, xOffset);
+        for (const key in sliderData) {
+            const data = sliderData[key];
+            drawPuzzlePiece(ctx, data.destX, data.yOffset, '#00000088');
+            drawPuzzlePiece(ctx, data.xOffset, data.yOffset);
+        }
     };
 
-    const drawPuzzlePiece = (ctx: CanvasRenderingContext2D, xOff: number, fill?: string) => {
-        ctx.translate(xOff, yOffset);
+    const drawPuzzlePiece = (ctx: CanvasRenderingContext2D, xOffset: number, yOffset: number, fill?: string) => {
+        ctx.translate(xOffset, yOffset);
         ctx.beginPath();
         ctx.moveTo(0, 0);
         ctx.arc(20, -5, 7, .75 * Math.PI, 2.25 * Math.PI);
@@ -188,7 +203,7 @@ export const FinishPuzzleCaptcha = ({ offset }: FinishPuzzleProps) => {
         }
         ctx.fill();
         ctx.stroke();
-        ctx.translate(-xOff, -yOffset);
+        ctx.translate(-xOffset, -yOffset);
     };
 
 
@@ -205,16 +220,34 @@ export const FinishPuzzleCaptcha = ({ offset }: FinishPuzzleProps) => {
         ctx.stroke();
     };
 
+    const setSliderX = (index: number, x: number) => {
+        setSliderData(old => {
+            const copy = [...old];
+            const toSet = [...copy.slice(0, index), {
+                ...copy[index],
+                xOffset: x
+            },
+            ...copy.slice(index + 1)];
+            return toSet;
+        });
+    };
+
 
     return (
         <ContentWrapper>
             <form onSubmit={onSubmit}>
-                <CaptchaBox width={500} height={350} offset={offset}>
+                <CaptchaBox width={500} height={325 + (sliderData.length * 30)} offset={offset}>
                     <Canvas ref={canvas} width={CANVAS_WIDTH} height={CANVAS_HEIGHT} color1={colors[0]} color2={colors[1]} color3={colors[2]} />
-                    <SliderWrapper>
-                        <Slider type='range' value={xOffset} min='0' max={CANVAS_WIDTH - 50} onChange={e => setXOffset(parseInt(e.target.value))} />
-                        {xOffset === 0 && <SliderPlaceholderText>Slide to finish the puzzle</SliderPlaceholderText>}
-                    </SliderWrapper>
+                    <div>
+                        {
+                            sliderData.map((s, i) => (
+                                <SliderWrapper key={i}>
+                                    <Slider type='range' value={s.xOffset} min='0' max={CANVAS_WIDTH - 50} onChange={e => setSliderX(i, parseInt(e.target.value))} />
+                                    {s.xOffset === 0 && <SliderPlaceholderText>Slide to finish the puzzle</SliderPlaceholderText>}
+                                </SliderWrapper>
+                            ))
+                        }
+                    </div>
                     <BottomContent>
                         <InputContent>
                             <ContainedButton className={wrong ? 'wrong' : ''} onAnimationEnd={() => setWrong(false)} type='submit'>Submit</ContainedButton>

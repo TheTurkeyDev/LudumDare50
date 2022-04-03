@@ -106,7 +106,7 @@ const groups: readonly Group[] = [
     {
         id: 'bench',
         display: 'Bench',
-        images: ['bench/b_1.jpg']
+        images: ['bench/b_1.jpg', 'bench/b_2.jpg', 'bench/b_3.jpg', 'bench/b_4.jpg']
     },
     {
         id: 'traffic_light',
