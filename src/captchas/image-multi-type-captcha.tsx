@@ -42,6 +42,10 @@ const IconBar = styled.div`
 
 const Icon = styled.i`
     font-size: 24px;
+
+    &:hover{
+        cursor: pointer;
+    }
 `;
 
 const ImageDiv = styled.div`
@@ -73,11 +77,9 @@ const CheckIcon = styled.i<CheckIconProps>`
 `;
 
 type ImageProps = {
-    readonly image: string
     readonly selected: boolean
 }
-const Image = styled.div<ImageProps>`
-    background-color: ${({ image }) => image};
+const Image = styled.img<ImageProps>`
     width: ${({ selected }) => selected ? '76' : '96'}px;
     height: ${({ selected }) => selected ? '76' : '96'}px;
     transition: 0.5s;
@@ -99,24 +101,19 @@ type Group = {
 
 const groups: readonly Group[] = [
     {
-        id: 'group_1',
-        display: 'Red',
-        images: ['red', 'red', 'red', 'red', 'red']
+        id: 'fire_hydrant',
+        display: 'Fire Hydrant',
+        images: ['fire_hydrant/fh_1.jpg', 'fire_hydrant/fh_2.jpg', 'fire_hydrant/fh_3.jpg', 'fire_hydrant/fh_4.jpg', 'fire_hydrant/fh_5.jpg']
     },
     {
-        id: 'group_2',
-        display: 'Cyan',
-        images: ['cyan', 'cyan', 'cyan', 'cyan', 'cyan']
+        id: 'bench',
+        display: 'Bench',
+        images: ['bench/b_1.jpg']
     },
     {
-        id: 'group_3',
-        display: 'Yellow',
-        images: ['yellow', 'yellow', 'yellow', 'yellow', 'yellow']
-    },
-    {
-        id: 'group_4',
-        display: 'Black',
-        images: ['black', 'black', 'black', 'black', 'black']
+        id: 'traffic_light',
+        display: 'Traffic Light',
+        images: ['traffic_light/tl_1.jpg', 'traffic_light/tl_2.jpg', 'traffic_light/tl_3.jpg']
     }
 ];
 
@@ -138,6 +135,14 @@ export const ImageMultiTypeCaptcha = () => {
     const { addTime, onChallengeComplete } = useGame();
 
     useEffect(() => {
+        reloadImage(false);
+    }, []);
+
+    const reloadImage = (removeTime: boolean) => {
+        if (removeTime) {
+            addTime(-10);
+        }
+
         const chosenGroup = groups[rand(groups.length)];
 
         setDisplayed(Array.from({ length: 9 }, () => {
@@ -153,7 +158,8 @@ export const ImageMultiTypeCaptcha = () => {
 
 
         setGroup(chosenGroup);
-    }, []);
+    };
+
 
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -193,16 +199,16 @@ export const ImageMultiTypeCaptcha = () => {
                     <Images>
                         {
                             displayed.map((d, i) => (
-                                <ImageDiv onClick={() => selectImage(i)} >
+                                <ImageDiv key={i} onClick={() => selectImage(i)} >
                                     <CheckIcon selected={d.selected} className='fa-solid fa-circle-check' />
-                                    <Image key={i} image={d.image} selected={d.selected} />
+                                    <Image src={`/res/imgs/${d.image}`} selected={d.selected} />
                                 </ImageDiv>
                             ))
                         }
                     </Images>
                     <Controlls>
                         <IconBar>
-                            <Icon className='fa-solid fa-arrow-rotate-right' />
+                            <Icon className='fa-solid fa-arrow-rotate-right' onClick={() => reloadImage(true)} />
                             <Icon className='fa-solid fa-circle-info' />
                         </IconBar>
                         <ContainedButton type='submit'>VERIFY</ContainedButton>

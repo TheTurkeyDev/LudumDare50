@@ -39,7 +39,9 @@ export const Game = () => {
 
     function startGame() {
         setStart(true);
-        setShownCaptcha(Challenge.ImageSingleCaptcha);
+        const toChoose = Object.keys(Challenge).filter(i => !isNaN(Number(i))).map(i => parseInt(i));
+        setShownCaptcha(toChoose[Math.floor(Math.random() * toChoose.length)]);
+        //setShownCaptcha(Challenge.ImageMultiSelectCaptcha);
     };
 
 

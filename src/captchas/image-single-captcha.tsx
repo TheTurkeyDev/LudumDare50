@@ -47,6 +47,9 @@ const IconBar = styled.div`
 
 const Icon = styled.i`
     font-size: 24px;
+    &:hover{
+        cursor: pointer;
+    }
 `;
 
 type ImageDivProps = {
@@ -91,11 +94,28 @@ const StyledHeadline5 = styled(Headline5)`
 type ImageType = {
     readonly image: string
     readonly answers: readonly number[]
+    readonly toSelect: string
 }
 const images: readonly ImageType[] = [
     {
-        image: '/res/imgs/google_map.png',
-        answers: [4, 5, 6, 11]
+        image: '/res/imgs/multi_select/img_1.jpg',
+        answers: [4, 8, 9, 13],
+        toSelect: 'traffic lights'
+    },
+    {
+        image: '/res/imgs/multi_select/img_2.jpg',
+        answers: [8, 9, 10, 11, 12, 13, 14, 15],
+        toSelect: 'street signs'
+    },
+    {
+        image: '/res/imgs/multi_select/img_3.jpg',
+        answers: [1, 2, 5, 6, 9, 10, 13, 14],
+        toSelect: 'fire hydrant'
+    },
+    {
+        image: '/res/imgs/multi_select/img_4.jpg',
+        answers: [1, 2, 5, 6],
+        toSelect: 'street sign'
     }
 ];
 
@@ -104,6 +124,12 @@ export const ImageSingleCaptcha = () => {
 
     const [image, setImage] = useState<ImageType>(() => images[Math.floor(Math.random() * images.length)]);
     const [selected, setSelected] = useState<readonly boolean[]>(() => Array(16).fill(false));
+
+    const reloadImage = () => {
+        addTime(-10);
+        setImage(images[Math.floor(Math.random() * images.length)]);
+        setSelected(Array(16).fill(false));
+    };
 
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -132,11 +158,11 @@ export const ImageSingleCaptcha = () => {
             <form onSubmit={onSubmit}>
                 <CaptchaBox>
                     <Title>
-                        <StyledSubtitle1>Select all images with a</StyledSubtitle1>
-                        <StyledHeadline5>{ }</StyledHeadline5>
+                        <StyledSubtitle1>Select all images with</StyledSubtitle1>
+                        <StyledHeadline5>{image.toSelect}</StyledHeadline5>
                         <StyledSubtitle1>Click verify once there are none left</StyledSubtitle1>
                     </Title>
-                    <Image url={'/res/imgs/google_map.png'}>
+                    <Image url={image.image}>
                         {
                             selected.map((s, i) => (
                                 <ImageDiv key={i} selected={s} onClick={() => selectCell(i)}>
@@ -147,7 +173,7 @@ export const ImageSingleCaptcha = () => {
                     </Image>
                     <Controlls>
                         <IconBar>
-                            <Icon className='fa-solid fa-arrow-rotate-right' />
+                            <Icon className='fa-solid fa-arrow-rotate-right' onClick={() => reloadImage()} />
                             <Icon className='fa-solid fa-circle-info' />
                         </IconBar>
                         <ContainedButton type='submit'>VERIFY</ContainedButton>
